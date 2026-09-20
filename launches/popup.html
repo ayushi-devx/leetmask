@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LeetMask - Universal Privacy</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup-container">
+    <!-- Ambient Background Glows -->
+    <div class="ambient-glow glow-1"></div>
+    <div class="ambient-glow glow-2"></div>
+
+    <!-- Header -->
+    <header class="popup-header">
+      <div class="brand">
+        <div class="logo-wrapper">
+          <img src="icons/icon48.png" alt="Logo" class="logo" />
+          <div class="logo-shine"></div>
+        </div>
+        <div class="brand-text">
+          <h1 class="title">LeetMask</h1>
+          <span class="subtitle">Universal Privacy Shield</span>
+        </div>
+      </div>
+      <div class="status-pill active" id="statusPill">
+        <span class="status-dot"></span>
+        <span class="status-text">Active</span>
+      </div>
+    </header>
+
+    <!-- Master Protection Card -->
+    <div class="control-card master-card">
+      <div class="control-row">
+        <div class="control-info">
+          <span class="control-title">Universal Protection</span>
+          <span class="control-desc">Disguise identity with dots (&bull;&bull;&bull;&bull;&bull;&bull;)</span>
+        </div>
+        <label class="switch" for="toggleEnabled">
+          <input type="checkbox" id="toggleEnabled" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Custom Access Code Card (Set by any user for their ID) -->
+    <div class="control-card code-card">
+      <div class="code-header">
+        <div class="control-info">
+          <span class="control-title">Secret Access Code</span>
+          <span class="control-desc">Set the code to unlock profile on page</span>
+        </div>
+        <span class="code-tag">Custom</span>
+      </div>
+      <div class="code-input-row">
+        <div class="input-wrap">
+          <input type="password" id="inputCustomCode" class="code-field" placeholder="Set custom code (e.g. seno)" autocomplete="off" />
+          <button type="button" id="btnToggleCode" class="btn-toggle-eye" title="Show/Hide code">
+            <svg id="eyeIcon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+          </button>
+        </div>
+        <button type="button" id="btnSaveCode" class="btn-save-code">Save</button>
+      </div>
+      <div id="codeSaveMsg" class="code-save-msg"></div>
+    </div>
+
+    <!-- Universal Mode Banner -->
+    <div class="mode-banner">
+      <div class="banner-icon">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+      </div>
+      <div class="banner-text">
+        <span class="banner-title">Auto-Detection Active</span>
+        <span class="banner-sub">Protects any LeetCode account automatically.</span>
+      </div>
+    </div>
+
+    <!-- Privacy Feature Toggles -->
+    <div class="options-card" id="featuresList">
+      <!-- 1. Auto Fullscreen (hides native address bar) -->
+      <div class="control-row small">
+        <div class="control-info">
+          <span class="control-title">Auto Fullscreen on LeetCode</span>
+          <span class="control-desc">Hides browser URL bar — shows our masked bar only</span>
+        </div>
+        <label class="switch small" for="toggleAutoFullscreen">
+          <input type="checkbox" id="toggleAutoFullscreen" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- 2. Top URL Bar -->
+      <div class="control-row small">
+        <div class="control-info">
+          <span class="control-title">Top Masked URL Bar</span>
+          <span class="control-desc">Displays clean https://leetcode.com/u/&bull;&bull;&bull;&bull;&bull;&bull;/</span>
+        </div>
+        <label class="switch small" for="toggleUrl">
+          <input type="checkbox" id="toggleUrl" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- 2. Submissions -->
+      <div class="control-row small">
+        <div class="control-info">
+          <span class="control-title">Mask After Submissions</span>
+          <span class="control-desc">Hides name across code submission results</span>
+        </div>
+        <label class="switch small" for="toggleSubmissions">
+          <input type="checkbox" id="toggleSubmissions" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- 3. Followers -->
+      <div class="control-row small">
+        <div class="control-info">
+          <span class="control-title">Mask Followers &amp; Stats</span>
+          <span class="control-desc">Disguises follower &amp; following counts</span>
+        </div>
+        <label class="switch small" for="toggleFollowers">
+          <input type="checkbox" id="toggleFollowers" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- 4. Avatar -->
+      <div class="control-row small">
+        <div class="control-info">
+          <span class="control-title">Mask Profile Avatar</span>
+          <span class="control-desc">Blurs user profile picture</span>
+        </div>
+        <label class="switch small" for="toggleAvatar">
+          <input type="checkbox" id="toggleAvatar" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="popup-footer">
+      <div class="footer-badge">
+        <span class="pulse-dot"></span>
+        <span class="target-site">Universal Protection &bull; leetcode.com</span>
+      </div>
+    </footer>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
