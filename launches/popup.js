@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const DEFAULT_SETTINGS = {
     enabled: true,
-    autoFullscreen: true,
+    autoFullscreen: false,
     maskUrl: true,
     maskSubmissions: true,
     maskFollowers: true,

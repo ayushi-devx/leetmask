@@ -44,7 +44,7 @@ function exitFullscreen(windowId) {
  * and toggle fullscreen accordingly
  */
 function handleTabChange(tabId, windowId, url) {
-  chrome.storage.sync.get({ autoFullscreen: true }, (settings) => {
+  chrome.storage.sync.get({ autoFullscreen: false }, (settings) => {
     if (!settings.autoFullscreen) return;
 
     if (isLeetCode(url)) {

@@ -76,21 +76,25 @@
     }
   }
 
-  /**
-   * Detect username from URL without modifying browser history
-   */
-  function detectFromUrl() {
-    try {
-      const path = window.location.pathname;
-      const match = path.match(/^(\/u\/)([^/]+)(\/.*)?$/i);
-      if (match && match[2]) {
-        const detectedHandle = match[2];
-        if (!detectedHandle.startsWith('••') && !detectedHandle.startsWith('..')) {
-          addMaskTarget(detectedHandle);
-        }
-      }
-    } catch (e) {}
-  }
+/**
+    * Detect username from URL without modifying browser history
+    * Only runs on NON-profile pages (so we don't mask other users' profiles)
+    */
+   function detectFromUrl() {
+     try {
+       const path = window.location.pathname;
+       // Skip profile pages (/u/username/) - we want to see other users' real names
+       if (/^\/u\/[^/]+\/?$/i.test(path)) return;
+       
+       const match = path.match(/^(\/u\/)([^/]+)(\/.*)?$/i);
+       if (match && match[2]) {
+         const detectedHandle = match[2];
+         if (!detectedHandle.startsWith('••') && !detectedHandle.startsWith('..')) {
+           addMaskTarget(detectedHandle);
+         }
+       }
+     } catch (e) {}
+   }
 
   /**
    * Mask the browser's native address bar URL using history.replaceState.
@@ -138,11 +142,15 @@
     }, 500);
   }
 
-  /**
-   * Detect username & realName from Next.js Data
-   */
-  function extractFromNextData() {
-    const nextScript = document.getElementById('__NEXT_DATA__');
+/**
+    * Detect username & realName from Next.js Data
+    * Only runs on NON-profile pages (so we don't mask other users' profiles)
+    */
+   function extractFromNextData() {
+     // Skip profile pages (/u/username/) - we want to see other users' real names
+     if (/^\/u\/[^/]+\/?$/i.test(window.location.pathname)) return;
+     
+     const nextScript = document.getElementById('__NEXT_DATA__');
     if (!nextScript) return;
     try {
       const data = JSON.parse(nextScript.textContent || '{}');
@@ -161,13 +169,17 @@
     } catch (e) {}
   }
 
-  /**
-   * Detect display name from profile header DOM
-   */
-  function extractFromProfileDom() {
-    const rankEl = Array.from(document.querySelectorAll('*')).find(el =>
-      el.children.length === 0 && /^Rank\s+[\d,]+/i.test(el.textContent.trim())
-    );
+/**
+    * Detect display name from profile header DOM
+    * Only runs on NON-profile pages (so we don't mask other users' profiles)
+    */
+   function extractFromProfileDom() {
+     // Skip profile pages (/u/username/) - we want to see other users' real names
+     if (/^\/u\/[^/]+\/?$/i.test(window.location.pathname)) return;
+     
+     const rankEl = Array.from(document.querySelectorAll('*')).find(el =>
+       el.children.length === 0 && /^Rank\s+[\d,]+/i.test(el.textContent.trim())
+     );
 
     if (rankEl) {
       const profileCard = rankEl.closest('div[class*="flex"], div');
@@ -213,30 +225,30 @@
     }
   }
 
-  /**
-   * Mask Followers & Social Stats
-   */
-  function maskFollowers(root) {
-    if (!currentSettings.enabled || !currentSettings.maskFollowers) return;
-    if (isUnlocked) return;
+/**
+    * Mask Followers & Social Stats
+    */
+   function maskFollowers(root) {
+     if (!currentSettings.enabled || !currentSettings.maskFollowers) return;
+     if (isUnlocked) return;
 
-    const candidates = root.querySelectorAll ?
-      root.querySelectorAll('a[href*="following"], a[href*="followers"], span, div, p') : [];
+     const candidates = root.querySelectorAll ?
+       root.querySelectorAll('a[href*="following"], a[href*="followers"], [class*="follower"], [class*="following"], span, div, p, li, strong, b') : [];
 
-    for (let i = 0; i < candidates.length; i++) {
-      const el = candidates[i];
-      if (el.children.length > 2) continue;
-      const text = el.textContent || '';
+     for (let i = 0; i < candidates.length; i++) {
+       const el = candidates[i];
+       if (el.children.length > 3) continue;
+       const text = el.textContent || '';
 
-      if (/\b\d+[\d,]*\s*(Following|Followers?)\b/i.test(text)) {
-        if (!el.getAttribute('data-lc-follower-masked')) {
-          el.setAttribute('data-lc-follower-orig', text);
-          el.setAttribute('data-lc-follower-masked', 'true');
-          el.innerHTML = text.replace(/(\d+[\d,]*)\s*(Following|Followers?)/gi, `${DOTS_SMALL} $2`);
-        }
-      }
-    }
-  }
+       if (/\b\d+[\d,]*\s*(Following|Followers?)\b/i.test(text)) {
+         if (!el.getAttribute('data-lc-follower-masked')) {
+           el.setAttribute('data-lc-follower-orig', text);
+           el.setAttribute('data-lc-follower-masked', 'true');
+           el.innerHTML = text.replace(/(\d+[\d,]*)\s*(Following|Followers?)/gi, `${DOTS_SMALL} $2`);
+         }
+       }
+     }
+   }
 
   function shouldSkip(el) {
     if (!el || el.nodeType !== Node.ELEMENT_NODE) return true;
@@ -355,7 +367,7 @@
     if (isUnlocked) return;
 
     const submissionNodes = root.querySelectorAll ?
-      root.querySelectorAll('[class*="submission"], [data-row-key], [class*="result"], tr') : [];
+      root.querySelectorAll('[class*="submission"], [data-row-key], [class*="result"], tr, [class*="Submission"], [class*="status"], td[data-label], [class*="history"]') : [];
 
     for (let i = 0; i < submissionNodes.length; i++) {
       processElement(submissionNodes[i]);
